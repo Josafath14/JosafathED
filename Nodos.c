@@ -8,11 +8,12 @@ struct Dato{
 
 int menu(void){
 	int opcion;
-	printf("[1] Crear dato\n");
-    printf("[2] funciones\n");
-	printf("[3] Mostrar dato\n");
-	printf("[4] Liberar dato\n");
-	printf("[5] Salir\n");
+    printf("\n...MENU...\n");
+	printf("[1]... Crear dato\n");
+    printf("[2]... funciones\n");
+	printf("[3]... Mostrar dato\n");
+	printf("[4]... Liberar dato\n");
+	printf("[5]... Salir\n");
 	printf("Escoga la opcion a utilizar: ");
 	scanf("%d", &opcion);
 	return opcion;
@@ -21,10 +22,11 @@ int menu(void){
 int submenu(void){
     int opc;
     printf("\n...Submenu...\n");
-    printf("[1].- Buscar...\n");
-    printf("[2].- Contar...\n");
-    printf("[3] Remplazar...\n");
-    printf("[4] Salir...\n");
+    printf("[1]... Buscar...\n");
+    printf("[2]... Contar...\n");
+    printf("[3]... Remplazar...\n");
+    printf("[4]... Ordenar...\n");
+    printf("[5]... Salir...\n");
     printf("Eliga la opcion deseada..\n");
     scanf("%d",&opc);
     return opc;
@@ -37,10 +39,12 @@ void Salir(struct Dato **ptr);
 void Buscar(struct Dato *ptr);
 void contar(struct Dato *ptr);
 void Remplazar(struct Dato *ptr);
+void Ordenar(struct Dato *ptr);
 
 int main (void){
 	struct Dato *ptr = NULL;
 	int opcion, opc;
+    printf("bienvenido al codigo de nodos\n");
 
 	do{
 		opcion = menu();
@@ -63,11 +67,15 @@ int main (void){
                         Remplazar(ptr);
                         break;
                     case 4:
+                        Ordenar(ptr);
+                        break;
+                    case 5:
+                        Salir(&ptr);
                         printf("Regresando...\n");
                     default:
-                        printf("Opcion invalida\n");
+                     printf("Opcion invalida\n");
                 }
-            } while(opc != 4);
+            } while(opc != 5);
                 break;
 			case 3:
 				mostrarDato(ptr);
@@ -180,6 +188,8 @@ void Buscar(struct Dato *ptr){
 }
 
 void contar(struct Dato *ptr){
+    for( ; ; )
+
 
     printf("usted eligio opcion 2\n");
 }
@@ -187,4 +197,9 @@ void contar(struct Dato *ptr){
 void Remplazar(struct Dato *ptr){
 
     printf("usted eligio opcion 3\n");
+}
+
+void Ordenar(struct Dato *ptr){
+
+    printf("usted eligio opcion 4\n");
 }
