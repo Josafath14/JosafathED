@@ -1,59 +1,67 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h>
+#include<stdlib.h>
 
-struct Dato{
-	int d;
-	struct Dato *ptrSig;
+struct arbol{
+    int dato;
+    struct arbol *izq, *der;
 };
 
-int menu(){
+struct arbol *crearnodo(){
+
+    struct arbol *nuevo;
+
+    nuevo = (struct arbol *)malloc(sizeof(struct arbol));
+
+    if(nuevo == NULL){
+
+        printf("Error de memoria\n");
+
+        return NULL;
+    }
+
+    printf("Ingrese el dato: ");
+    scanf("%d",&nuevo->dato);
+
+    nuevo->izq = NULL;
+    nuevo->der = NULL;
+
+    return nuevo;
+}
+
+void mostrar(struct arbol *raiz){
+
+    if(raiz != NULL){
+
+        mostrar(raiz->izq);
+
+        printf("%d ", raiz->dato);
+
+        mostrar(raiz->der);
+    }
+}
+
+int menu(void){
+
 	int opcion;
 
     printf("\n...MENU...\n");
 	printf("[1]... Crear dato\n");
-    printf("[2]... Funciones\n");
-	printf("[3]... Mostrar dato\n");
-	printf("[4]... Liberar dato\n");
-	printf("[5]... Salir\n");
+    printf("[2]... Mostrar\n");
+    printf("[3]... Salir\n");
 	printf("Escoga la opcion a utilizar: ");
+
 	scanf("%d", &opcion);
 
 	return opcion;
 }
 
-int submenu(){
+int main(void){
 
-    int opc;
+    struct arbol *raiz, *ptrtemp, *ptrcop;
 
-    printf("\n...Submenu...\n");
-    printf("[1]... Buscar...\n");
-    printf("[2]... Contar...\n");
-    printf("[3]... Reemplazar...\n");
-    printf("[4]... Ordenar...\n");
-    printf("[5]... Salir...\n");
-    printf("Eliga la opcion deseada..\n");
-    scanf("%d",&opc);
+    int opcion;
 
-    return opc;
-}
-
-void crearDato(struct Dato **ptr);
-void mostrarDato(struct Dato *ptr);
-void liberarDato(struct Dato **ptr);
-void Salir(struct Dato **ptr);
-
-void Buscar(struct Dato *ptr);
-void contar(struct Dato *ptr);
-void Reemplazar(struct Dato *ptr);
-void Ordenar(struct Dato *ptr);
-
-int main(){
-
-	struct Dato *ptr = NULL;
-
-	int opcion, opc;
-
-    printf("Bienvenido al codigo de nodos\n");
+    raiz = NULL;
 
 	do{
 
@@ -63,325 +71,69 @@ int main(){
 
 			case 1:
 
-				crearDato(&ptr);
+				ptrtemp = crearnodo();
 
-				break;
+                if(ptrtemp == NULL)
+                    printf("No se creo el nodo\n");
 
-            case 2:
+                else{
 
-                do{
+                    if(raiz == NULL)
+                        raiz = ptrtemp;
 
-                    opc = submenu();
+                    else{
 
-                    switch(opc){
+                        ptrcop = raiz;
 
-                        case 1:
+                        do{
 
-                            Buscar(ptr);
+                            if(ptrtemp->dato < ptrcop->dato){
 
-                            break;
+                                if(ptrcop->izq == NULL){
 
-                        case 2:
+                                    ptrcop->izq = ptrtemp;
+                                    break;
+                                }
 
-                            contar(ptr);
+                                else
+                                    ptrcop = ptrcop->izq;
+                            }
 
-                            break;
+                            else{
 
-                        case 3:
+                                if(ptrcop->der == NULL){
 
-                            Reemplazar(ptr);
+                                    ptrcop->der = ptrtemp;
+                                    break;
+                                }
 
-                            break;
+                                else
+                                    ptrcop = ptrcop->der;
+                            }
 
-                        case 4:
-
-                            Ordenar(ptr);
-
-                            break;
-
-                        case 5:
-
-                            printf("Regresando...\n");
-
-                            break;
-
-                        default:
-
-                            printf("Opcion invalida\n");
+                        }while(1);
                     }
-
-                }while(opc != 5);
-
-                break;
-
-			case 3:
-
-				mostrarDato(ptr);
+                }
 
 				break;
 
-			case 4:
+			case 2:
 
-				liberarDato(&ptr);
+                mostrar(raiz);
 
 				break;
-
-			case 5:
-
-				Salir(&ptr);
+            
+            case 3:
 
                 printf("Saliendo del programa...\n");
 
 				break;
 
 			default:
-
 				printf("Opcion invalida\n");
 		}
 
-	}while(opcion != 5);
+	}while(opcion != 3);
 
-	return 0;
-}
-
-void crearDato(struct Dato **ptr){
-
-    struct Dato *nuevo = (struct Dato *)malloc(sizeof(struct Dato));
-    struct Dato *ptraux;
-
-    if(nuevo == NULL){
-
-        printf("Error de memoria\n");
-
-        return;
-    }
-
-    printf("Ingresa un numero: ");
-    scanf("%d",&nuevo->d);
-
-    nuevo->ptrSig = NULL;
-
-    if(*ptr == NULL){
-
-        *ptr = nuevo;
-    }
-    else{
-
-        ptraux = *ptr;
-
-        while(ptraux->ptrSig != NULL){
-
-            ptraux = ptraux->ptrSig;
-        }
-
-        ptraux->ptrSig = nuevo;
-    }
-
-    printf("Nodo agregado correctamente\n");
-}
-
-void mostrarDato(struct Dato *ptr){
-
-    struct Dato *ptraux;
-
-    if(ptr == NULL){
-
-        printf("Lista vacia\n");
-
-        return;
-    }
-
-    ptraux = ptr;
-
-    while(ptraux != NULL){
-
-        printf("%d -> ",ptraux->d);
-
-        ptraux = ptraux->ptrSig;
-    }
-
-    printf("NULL\n");
-}
-
-void liberarDato(struct Dato **ptr){
-
-    struct Dato *ptraux;
-    struct Dato *anterior;
-
-    if(*ptr == NULL){
-
-        printf("Lista vacia\n");
-    }
-    else{
-
-        if((*ptr)->ptrSig == NULL){
-
-            free(*ptr);
-
-            *ptr = NULL;
-
-            printf("Se elimino el unico nodo\n");
-
-            return;
-        }
-        else{
-
-            ptraux = *ptr;
-
-            while(ptraux->ptrSig != NULL){
-
-                anterior = ptraux;
-
-                ptraux = ptraux->ptrSig;
-            }
-
-            anterior->ptrSig = NULL;
-
-            free(ptraux);
-
-            printf("Se elimino el ultimo nodo\n");
-        }
-    }
-}
-
-void Salir(struct Dato **ptr){
-
-    struct Dato *ptraux;
-
-    while(*ptr != NULL){
-
-        ptraux = *ptr;
-
-        *ptr = (*ptr)->ptrSig;
-
-        free(ptraux);
-    }
-
-    printf("Lista liberada\n");
-}
-
-void Buscar(struct Dato *ptr){
-
-    int num;
-    int band = 0;
-
-    if(ptr == NULL){
-
-        printf("Lista vacia\n");
-
-        return;
-    }
-
-    printf("Ingresa el numero a buscar: ");
-    scanf("%d",&num);
-
-    while(ptr != NULL){
-
-        if(ptr->d == num){
-
-            band = 1;
-        }
-
-        ptr = ptr->ptrSig;
-    }
-
-    if(band == 1){
-
-        printf("Numero encontrado\n");
-    }
-    else{
-
-        printf("Numero no encontrado\n");
-    }
-}
-
-void contar(struct Dato *ptr){
-
-    int cont = 0;
-
-    if(ptr == NULL){
-
-        printf("Lista vacia\n");
-
-        return;
-    }
-
-    while(ptr != NULL){
-
-        cont++;
-
-        ptr = ptr->ptrSig;
-    }
-
-    printf("Cantidad de nodos: %d\n",cont);
-}
-
-void Reemplazar(struct Dato *ptr){
-
-    int viejo, nuevo;
-    int band = 0;
-
-    if(ptr == NULL){
-
-        printf("Lista vacia\n");
-
-        return;
-    }
-
-    printf("Numero a reemplazar: ");
-    scanf("%d",&viejo);
-
-    printf("Nuevo numero: ");
-    scanf("%d",&nuevo);
-
-    while(ptr != NULL){
-
-        if(ptr->d == viejo){
-
-            ptr->d = nuevo;
-
-            band = 1;
-        }
-
-        ptr = ptr->ptrSig;
-    }
-
-    if(band == 1){
-
-        printf("Numero reemplazado\n");
-    }
-    else{
-
-        printf("Numero no encontrado\n");
-    }
-}
-
-void Ordenar(struct Dato *ptr){
-
-    struct Dato *i;
-    struct Dato *j;
-
-    int aux;
-
-    if(ptr == NULL){
-
-        printf("Lista vacia\n");
-
-        return;
-    }
-
-    for(i = ptr; i != NULL; i = i->ptrSig){
-
-        for(j = i->ptrSig; j != NULL; j = j->ptrSig){
-
-            if(i->d > j->d){
-
-                aux = i->d;
-                i->d = j->d;
-                j->d = aux;
-            }
-        }
-    }
-
-    printf("Lista ordenada correctamente\n");
+return 0;
 }
